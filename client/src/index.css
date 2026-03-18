@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+body {
+    @apply m-0;
+}
+
+* {
+    @apply box-border;
+}
