@@ -1,12 +1,23 @@
 import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Header } from './Components/Header';
+import { Home } from './Pages/Home/Home';
+import { Favorites } from './Pages/Favorites/Favorites';
+import { NotFound } from './Pages/NotFound/NotFound';
 
 function App() {
   
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center">
-        <h1 className="text-4xl font-bold">Frontend Template</h1>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Header />} >
+            <Route index element={<Home />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }

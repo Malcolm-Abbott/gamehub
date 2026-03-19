@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
 body {
-    @apply m-0;
+    @apply m-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen;
+    min-height: 100dvh;
 }
-
+  
 * {
     @apply box-border;
+}
+  
+.content-container {
+    @apply w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16;
 }
