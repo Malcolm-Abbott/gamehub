@@ -191,6 +191,7 @@ On the Vercel project setup screen:
   - If your app uses runtime configuration (API keys, URLs, etc.), add them here.
   - Example:
     - `VITE_API_BASE_URL = https://api.example.com`
+    - `VITE_RAWG_API_KEY = <your rawg api key>` (required by this app)
 
 When everything looks correct, click **“Deploy”**.
 
