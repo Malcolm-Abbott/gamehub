@@ -56,7 +56,7 @@ function buildUrl(
  * Including a parameter in the object below means we send it in the request;
  * omitting it or passing undefined means the API uses its default (no filter).
  */
-export type GamesListParams = {
+type GamesListParams = {
   page?: number;
   page_size?: number;
   search?: string;
@@ -66,7 +66,7 @@ export type GamesListParams = {
   ordering?: string;
 };
 
-export interface RawgGame {
+interface RawgGame {
   id: number;
   name: string;
   released: string | null;
@@ -78,7 +78,7 @@ export interface RawgGame {
   short_screenshots?: { id: number; image: string }[];
 }
 
-export interface GamesListResponse {
+interface GamesListResponse {
   count: number;
   next: string | null;
   previous: string | null;
@@ -88,7 +88,7 @@ export interface GamesListResponse {
 /**
  * GET /games — list games with optional filters and pagination.
  */
-export async function fetchGames(
+async function fetchGames(
   params: GamesListParams = {}
 ): Promise<GamesListResponse> {
   const url = buildUrl('/games', params);
@@ -104,7 +104,7 @@ export async function fetchGames(
 /**
  * GET /games/{id} — single game details.
  */
-export async function fetchGameById(id: string | number): Promise<RawgGame> {
+async function fetchGameById(id: string | number): Promise<RawgGame> {
   const url = buildUrl(`/games/${id}`);
   const res = await fetch(url);
 
@@ -119,7 +119,7 @@ export async function fetchGameById(id: string | number): Promise<RawgGame> {
  * Game trailer/movie from GET /games/{id}/movies
  * Docs: https://rawg.readme.io/reference/get-a-list-of-games-trailers
  */
-export interface RawgGameMovie {
+interface RawgGameMovie {
   id: number;
   name: string;
   preview: string; // thumbnail image URL
@@ -130,7 +130,7 @@ export interface RawgGameMovie {
  * GET /games/{id}/movies — list of trailers/preview videos for a game.
  * Use the same game id as fetchGameById. Returns an array (may be empty if no trailers).
  */
-export async function fetchGameTrailers(
+async function fetchGameTrailers(
   gameId: string | number
 ): Promise<RawgGameMovie[]> {
   const url = buildUrl(`/games/${gameId}/movies`);
@@ -143,3 +143,8 @@ export async function fetchGameTrailers(
   const json = await res.json();
   return Array.isArray(json.results) ? json.results : [];
 }
+
+// Satisfies noUnusedLocals while this file has no exports (restore exports to use from app).
+void fetchGames;
+void fetchGameById;
+void fetchGameTrailers;
