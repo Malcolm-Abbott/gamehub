@@ -1,5 +1,7 @@
 /** GET /genres — each item matches RAWG `Genre` */
 import { getApiKey } from "./apiKey";
+import { fetchGames } from "./games";
+import { GamesListResponse } from "./games";
 
 export interface RawgGenre {
     id: number;
@@ -39,5 +41,16 @@ export interface RawgGenre {
       throw new Error(`RAWG API error: ${res.status} ${res.statusText}`);
     }
     return (await res.json()) as GenresListResponse;
+  }
+
+  export async function fetchGamesByGenre(genreId: number): Promise<GamesListResponse> {
+    const url = new URL(`https://api.rawg.io/api/games`);
+    url.searchParams.set('key', getApiKey());
+    url.searchParams.set('genres', genreId.toString());
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`RAWG API error: ${res.status} ${res.statusText}`);
+    }
+    return (await res.json()) as GamesListResponse;
   }
   
