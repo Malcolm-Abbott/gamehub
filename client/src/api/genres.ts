@@ -1,6 +1,5 @@
 /** GET /genres — each item matches RAWG `Genre` */
 import { getApiKey } from "./apiKey";
-import { fetchGames } from "./games";
 import { GamesListResponse } from "./games";
 
 export interface RawgGenre {
