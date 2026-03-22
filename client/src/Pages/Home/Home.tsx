@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 // import { RawgGame } from "../../api/games";
 import { Loading } from "../Loading/Loading";
 import { Error } from "../Error/Error";
+import { Hero } from "./Hero";
 
 export function Home() {
     // const [featuredGames, setFeaturedGames] = useState<RawgGame[]>([]);
@@ -29,7 +30,7 @@ export function Home() {
 
   return (
     <div>
-        <h1 className="text-2xl font-bold text-white">Home</h1>
+        <Hero />
     </div>
   )
 }
