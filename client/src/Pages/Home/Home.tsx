@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Loading } from "../Loading/Loading";
 import { Error } from "../Error/Error";
 import { Hero } from "./Hero";
+import { GenresHome } from "./GenresHome";
 
 export function Home() {
     // const [featuredGames, setFeaturedGames] = useState<RawgGame[]>([]);
@@ -29,8 +30,9 @@ export function Home() {
   {error && <Error />}
 
   return (
-    <div>
+    <div className="flex flex-col gap-12 lg:gap-16">
         <Hero />
+        <GenresHome />
     </div>
   )
 }
