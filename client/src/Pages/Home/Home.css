@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+.hero-title {
+    @media all and (width >= 574px) {
+        @apply leading-snug;
+    }
+}
