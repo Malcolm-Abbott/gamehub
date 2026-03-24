@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 // import { RawgGame } from "../../api/games";
 import { Loading } from "../Loading/Loading";
 import { Error } from "../Error/Error";
-import { Hero } from "./Hero";import { GenresHome } from "./GenresHome";
-import { BrowseBy } from "./BrowseBy";
+import { Hero } from "./Hero";
+import { GenresHome } from "./GenresHome";
+import { PlatformsHome } from "./PlatformsHome";
+import { FeaturedHome } from "./FeaturedHome";
 
 export function Home() {
     // const [featuredGames, setFeaturedGames] = useState<RawgGame[]>([]);
@@ -32,9 +34,9 @@ export function Home() {
   return (
     <div className="flex flex-col gap-12 lg:gap-16">
         <Hero />
-        <BrowseBy category="genre" />
-        <BrowseBy category="platform" />
-        <BrowseBy category="featured" />
+        <GenresHome />
+        <PlatformsHome />
+        <FeaturedHome />
     </div>
   )
 }
