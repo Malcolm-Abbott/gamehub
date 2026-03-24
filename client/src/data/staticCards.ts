@@ -59,3 +59,13 @@ export const simulation: RawgGenre = {
   image_background:
     'https://media.rawg.io/media/games/e40/e40cc9d1957b0a0ed7e389834457b524.jpg',
 };
+
+/** Single import for the home genre grid: same objects as the named exports above. */
+export const genreCards: RawgGenre[] = [
+  shooter,
+  racing,
+  sports,
+  rolePlayingGamesRpg,
+  strategy,
+  simulation,
+];
