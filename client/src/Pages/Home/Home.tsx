@@ -1,7 +1,42 @@
+
+import { useEffect, useState } from "react";
+// import { RawgGame } from "../../api/games";
+import { Loading } from "../Loading/Loading";
+import { Error } from "../Error/Error";
+import { Hero } from "./Hero";
+import { GenresHome } from "./GenresHome";
+import { PlatformsHome } from "./PlatformsHome";
+import { FeaturedHome } from "./FeaturedHome";
+
 export function Home() {
-    return (
-        <div>
-            <h1 className="text-2xl font-bold text-white">Home</h1>
-        </div>
-    )
+    // const [featuredGames, setFeaturedGames] = useState<RawgGame[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<unknown>();
+    
+    useEffect(() => {
+        async function load() {
+            try {
+
+            } catch (err) {
+                setError(err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        load();
+        
+  }, []);
+
+  {isLoading && <Loading />}
+
+  {error && <Error />}
+
+  return (
+    <div className="flex flex-col gap-12 lg:gap-16">
+        <Hero />
+        <GenresHome />
+        <PlatformsHome />
+        <FeaturedHome />
+    </div>
+  )
 }

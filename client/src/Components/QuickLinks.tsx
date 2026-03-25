@@ -9,7 +9,7 @@ export function QuickLinks() {
       <div className="flex items-center gap-2">
         <Link to="/" className="group">
           <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg group-hover:shadow-purple-500/50 transition-all duration-300 group-hover:scale-110">
-            <span className="text-white font-bold text-lg lg:text-xl">GH</span>
+            <span className="bg-gradient-to-r from-purple-900/80 to-blue-800/80 bg-clip-text text-transparent font-bold text-lg lg:text-xl">GH</span>
           </div>
         </Link>
         <div className="hidden md:block font-bold text-xl lg:text-2xl">
