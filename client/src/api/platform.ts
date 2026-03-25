@@ -66,7 +66,7 @@ export const pc: RawgPlatform = {
         "<p>PC games, or personal computer games, started with the video game crash of 1983. PC games became popular after the development of the microprocessor and microcomputer. Some of the first PC games were Bertie the Brain, OXO and Spacewar!<br />\nAs the 3D graphics accelerators became faster and CPU power improved, PC games became more realistic and more accessible to produce. The PC market sales rocketed in the 80s when IBM computers and sound cards were generated. The platform involves different peripherals, gaming hardware, and software. These are mouse and keyboard; gamepads and motion controllers aren&#39;t obligatory, but still popularly accepted. Better hardware improves the game&#39;s accuracy; it usually lets the players use more NPCs than equivalents on other platforms. With the platform, the players can perform every sort of game. For example, shooters are easy to play due to the mouse controllers. However, the main reason for the PC games popularity is their lower prices and the backward compatibility with older titles, which leaves much to be desired on cosoles.</p>",
 };
 
-export const xboxSeriesX: RawgPlatform = {
+export const xboxSeriesXs: RawgPlatform = {
     id: 186,
     name: "Xbox Series S/X",
     slug: "xbox-series-x",
@@ -79,7 +79,7 @@ export const xboxSeriesX: RawgPlatform = {
     description: "",
 };
 
-export const playstation5: RawgPlatform = {
+export const ps5: RawgPlatform = {
     id: 187,
     name: "PlayStation 5",
     slug: "playstation5",
