@@ -16,7 +16,7 @@ export function Home() {
     useEffect(() => {
         async function load() {
             try {
-                console.log('home');
+
             } catch (err) {
                 setError(err);
             } finally {
