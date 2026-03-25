@@ -130,7 +130,7 @@ For side-by-side comparison with the source:
 
 - **`client/src/Pages/Home/GenresHome.tsx`** — **`GenreCard`**: `Link` + `img` + two overlay `div`s as above.
 
-Related: **`readme/home-components/GenreCard.md`** — outer `Link` layers (`group`, `relative`, gradient fill, border, hover scale/shadow).
+Related: **`readme/home-components/genrecard.md`** — outer `Link` layers (`group`, `relative`, gradient fill, border, hover scale/shadow).
 
 ---
 
