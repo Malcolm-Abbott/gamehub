@@ -102,3 +102,18 @@ Parents pass an instantiated icon element and title text:
 ```
 
 This keeps `SectionTitle` presentational while allowing each page/section to control icon choice and size overrides.
+
+---
+
+## Home spacing model
+
+Home layout uses two independent spacing layers:
+
+- **Page-level section spacing** in `Home.tsx`:
+  - `div className="flex flex-col gap-12 lg:gap-16"`
+  - Controls vertical distance between `Hero`, `GenresHome`, `PlatformsHome`, and `FeaturedHome`.
+- **Section-level internal spacing** in each section component:
+  - `section className="flex flex-col gap-4 lg:gap-6"`
+  - Controls distance between `SectionTitle` and that section's own card/content grid.
+
+This separation lets you increase room between major sections without creating oversized gaps between titles and their immediate content.

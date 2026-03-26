@@ -8,17 +8,20 @@ This note walks through how **`GenreCard`** is built in **`GenresHome.tsx`**: wh
 
 | Piece | Role |
 |--------|------|
-| **`GenresHome.tsx`** | Section: `SectionTitle` + grid of genre cards. |
+| **`GenresHome.tsx`** | Section wrapper with local spacing: `SectionTitle` + grid of genre cards. |
 | **`GenreCard`** | Local function component: one card, implemented as a **`Link`** with utility classes for look and feel. |
 
 **Composition (current):**
 
 ```
 GenresHome
-├── SectionTitle  ("Browse by Genre")
-└── div (grid)
-    └── GenreCard  → <Link to="..." className="..." />
+└── section (flex flex-col gap-4 lg:gap-6)
+    ├── SectionTitle  ("Browse by Genre")
+    └── div (grid)
+        └── GenreCard  → <Link to="..." className="..." />
 ```
+
+The section wrapper keeps title-to-grid spacing local to `GenresHome`, separate from page-level spacing in `Home.tsx`.
 
 ---
 

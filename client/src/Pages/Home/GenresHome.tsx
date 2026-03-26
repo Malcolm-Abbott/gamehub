@@ -6,14 +6,14 @@ import { SectionTitle } from './SectionTitle';
 
 export function GenresHome() {
     return (
-        <>
+        <section className="flex flex-col gap-4 lg:gap-6">
             <SectionTitle icon={<Gamepad2Icon className="w-7 h-7 text-purple-400" aria-hidden="true" focusable="false" />} title="Browse by Genre" />
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                 {genreCards.map((genre) => (
                     <GenreCard key={genre.id} genre={genre} />
                 ))}
             </div>
-        </>
+        </section>
     )
 }
 
