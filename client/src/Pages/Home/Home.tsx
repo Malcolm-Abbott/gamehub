@@ -27,9 +27,9 @@ export function Home() {
         
   }, []);
 
-  {isLoading && <Loading />}
+  if (isLoading) return <Loading />;
 
-  {error && <Error />}
+  if (error) return <Error />;
 
   return (
     <div className="flex flex-col gap-12 lg:gap-16">
