@@ -4,7 +4,7 @@ import { SectionTitle } from "./SectionTitle"
 export function FeaturedHome() {
     return (
         <>
-            <SectionTitle icon={<SparklesIcon className="w-7 h-7 text-purple-400" />} title="Featured Games" />
+            <SectionTitle icon={<SparklesIcon className="w-7 h-7 text-purple-400" aria-hidden="true" focusable="false" />} title="Featured Games" />
         </>
     )
 }

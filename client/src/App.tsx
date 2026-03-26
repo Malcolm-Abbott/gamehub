@@ -6,6 +6,7 @@ import { Favorites } from './Pages/Favorites/Favorites';
 import { NotFound } from './Pages/NotFound/NotFound';
 import { Genres } from './Pages/Genres/Genres';
 import { Platforms } from './Pages/Platforms/Platforms';
+import { Game } from './Pages/Game/Game';
 
 function App() {
   
@@ -17,6 +18,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="/genres/:genreId" element={<Genres />} />
             <Route path="/platforms/:platformId" element={<Platforms />} />
+            <Route path="/games/:gameId" element={<Game />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="*" element={<NotFound />} />
           </Route>

@@ -8,7 +8,7 @@ export function Header() {
         <NavLinks />
       </header>
 
-      <div className="content-container">
+      <div className="content-container mb-8">
         <Outlet />
       </div>
     </>

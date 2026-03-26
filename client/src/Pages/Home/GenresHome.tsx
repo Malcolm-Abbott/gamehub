@@ -7,7 +7,7 @@ import { SectionTitle } from './SectionTitle';
 export function GenresHome() {
     return (
         <>
-            <SectionTitle icon={<Gamepad2Icon className="w-7 h-7 text-purple-400" />} title="Browse by Genre" />
+            <SectionTitle icon={<Gamepad2Icon className="w-7 h-7 text-purple-400" aria-hidden="true" focusable="false" />} title="Browse by Genre" />
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                 {genreCards.map((genre) => (
                     <GenreCard key={genre.id} genre={genre} />

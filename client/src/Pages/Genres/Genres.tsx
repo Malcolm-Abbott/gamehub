@@ -5,7 +5,7 @@ import type { RawgGame } from "../../api/games";
 import { Loading } from "../Loading/Loading";
 import { Error } from "../Error/Error";
 import { GameCard } from "../../shared-components/GameCard";
-import { BackToHome } from "../../shared-components/backToHome";
+import { BackToHome } from "../../shared-components/BackToHome";
 import { Gamepad2Icon } from "lucide-react";
 import { SectionTitle } from "../Home/SectionTitle";
 
@@ -43,8 +43,7 @@ export function Genres() {
         <>
             <div className="flex flex-col gap-6 lg:gap-8">
                 <BackToHome />
-                <SectionTitle icon={<Gamepad2Icon className="w-10 h-10 text-purple-400 lg:w-16 lg:h-16" />} title={genre?.name ?? ""} addClass="text-3xl lg:text-5xl" />
-                <p className="text-slate-400 text-lg font-medium"><span className="bg-gradient-to-t from-purple-400 to-blue-400 bg-clip-text text-transparent font-bold">{genre?.games_count ?? "—"}</span> Games Found</p>
+                <SectionTitle icon={<Gamepad2Icon className="w-10 h-10 text-purple-400 lg:w-16 lg:h-16" aria-hidden="true" focusable="false" />} title={genre?.name ?? ""} addClass="text-3xl lg:text-5xl" genre={genre} />
                 <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {games.map((game) => (
                         <GameCard key={game.id} game={game} genre={genre?.name ?? ""} />

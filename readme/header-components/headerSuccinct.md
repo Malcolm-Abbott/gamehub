@@ -2,8 +2,8 @@
 
 ### Structure
 
-- **`Header`**: Renders the top bar plus page content. Outlet is wrapped in `<div className="content-container"><Outlet /></div>` so page content matches the nav’s width and padding.
-  - Header bar: `sticky top-0 z-20 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-xl border-b border-slate-700/50 py-4` (sticky at the top with z-20 so it stays above the page content).
+- **`Header`**: Renders the top bar plus page content. Outlet is wrapped in `<div className="content-container mb-8"><Outlet /></div>` so page content matches the nav’s width and padding and keeps consistent bottom spacing.
+  - Header bar: `sticky top-0 z-20 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-xl border-b border-slate-700/50 py-4 mb-8` (sticky at the top with z-20 so it stays above the page content).
 - **`NavLinks`** inside header:
   - `<nav className="content-container flex items-center justify-between">`
   - Left: `QuickLinks` (logo, GameHub, Home, Favorites).
@@ -14,7 +14,7 @@
 
 - `flex items-center justify-between` on `<nav>`: horizontal layout, vertical centering.
 - `QuickLinks`: outer `flex items-center lg:basis-1/2` (no justify — first child at start). First child: logo + GameHub. Second child: wrapper `hidden lg:flex flex-1 justify-evenly items-center` containing Home and Favorites links (flex-1 takes remaining width; justify-evenly spreads the two links).
-- `InputAndMenu`: search wrapper `hidden md:block basis-1/2`; menu icon `lg:hidden`.
+- `InputAndMenu`: search wrapper `hidden md:block basis-1/2`; mobile menu is a labeled button (`aria-label="Open navigation menu"`) that contains the icon and is hidden at `lg`.
 - Visibility:
   - **Mobile**: logo + menu only (search, GameHub text, quick links hidden).
   - **Tablet (`md`)**: GameHub text and search appear; menu still visible.
@@ -32,10 +32,11 @@
 
 - Wrapper: `<div className="relative">`.
 - Icon:
-  - `<SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />`
+  - `<SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" focusable="false" />`
   - `absolute` inside `relative` parent + `top-1/2 -translate-y-1/2` centers vertically; `left-3` sets horizontal offset.
 - Input:
   - `w-full pl-10 pr-4 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200`.
+  - `aria-label="Search games"` provides an explicit accessible name.
   - `pl-10` creates space so text doesn’t collide with the icon.
 
 ### Background colors

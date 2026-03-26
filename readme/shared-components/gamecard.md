@@ -21,8 +21,9 @@ Genres
 ├── SectionTitle  (genre name from API)
 └── ul (grid)
     └── GameCard  (per game) → li
-        ├── div (aspect-square) → img
-        ├── div (meta: title + row)
+        ├── Link (/games/:gameId)
+        │   ├── div (aspect-square) → img
+        │   └── div (meta: title + row)
         └── button (heart, absolute)
 ```
 
@@ -33,15 +34,15 @@ Genres
 1. **`useParams()`** in **`Genres`** reads **`genreId`** from the URL.
 2. **`useEffect`** runs when **`genreId`** changes. It **`Promise.all`**:
    - **`fetchGamesByGenre(Number(genreId))`** → RAWG **`/games?genres={id}`** → **`games.results`** stored in state.
-   - **`fetchGameGenres()`** → list of genres → **`find`** by id → **`setGenre(genreById.name)`** for the human-readable label.
-3. The page renders **`games.map((game) => <GameCard key={game.id} game={game} genre={genre ?? ""} />)`**.
+   - **`fetchGameGenres()`** → list of genres → **`find`** by id → **`setGenre(genreById)`** for section metadata and display name.
+3. The page renders **`games.map((game) => <GameCard key={game.id} game={game} genre={genre?.name ?? ""} />)`**.
 4. **`GameCard`** does **not** fetch data: it receives **`game: RawgGame`** and **`genre: string`** already resolved upstream.
 
 **`RawgGame` fields used here:**
 
 | Field | Use in `GameCard` |
 |--------|-------------------|
-| **`id`** | React **`key`** on the parent **`Genres`** list (not inside **`GameCard`**). |
+| **`id`** | React **`key`** on the parent list and route target for the game details link (`/games/${game.id}`). |
 | **`name`** | **`alt`** on the image and visible **title**. |
 | **`background_image`** | **`src`**, with **`?? ""`** if null. |
 | **`platforms`** | Optional array of **`{ platform: { id, name, slug } }`** — filtered and mapped to badges. |
@@ -131,6 +132,20 @@ Below, the main regions match the order they appear in the TSX.
 | Row **`div`** | **`flex justify-between`** | Genre left, platforms right. |
 | Platform **`h4`** | **`bg-slate-700/50 rounded-md px-2 py-1`** | Chip look; **`group-hover:`** variants add purple border/background emphasis. |
 | Platform inner **`span`** | Same gradient text trick as genre | Chips match the genre hover treatment. |
+
+---
+
+## Navigation and actions
+
+`GameCard` separates navigation and actions into two interactive elements:
+
+- Main card content is wrapped in **`Link`** to **`/games/:gameId`**.
+- The heart control remains a **`button`** so it can represent a UI action independently from navigation.
+
+Accessibility labels are attached to both controls:
+
+- Link: **`aria-label`** describes opening the selected game details page.
+- Button: **`aria-label`** describes adding the selected game to favorites.
 
 ---
 

@@ -142,7 +142,7 @@ hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20
 
 ## File reference
 
-- **`client/src/Pages/Home/GenresHome.tsx`** — exports **`GenresHome`**, defines **`GenreCard`** (local), uses **`Link`** from **`react-router-dom`** with **`to="/"`** as a placeholder until genre routes exist.
+- **`client/src/Pages/Home/GenresHome.tsx`** — exports **`GenresHome`**, defines **`GenreCard`** (local), uses **`Link`** from **`react-router-dom`** with **`to={`/genres/${genre.id}`}`** to route into the genre page.
 
 ---
 
