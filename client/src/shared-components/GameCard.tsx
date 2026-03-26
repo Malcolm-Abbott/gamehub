@@ -1,4 +1,5 @@
 import type { RawgGame } from "../api/games";
+import { HeartIcon } from "lucide-react";
 
 type GameCardProps = {
     game: RawgGame;
@@ -18,25 +19,28 @@ export function GameCard({ game, genre }: GameCardProps) {
                 </h3>
                 <div className="flex justify-between">
                     <p className="m-0 text-sm text-slate-400 basis-1/2 font-medium">
-                    
-                    <span className="group-hover:bg-gradient-to-br from-purple-700/80 to-blue-600/80 group-hover:bg-clip-text group-hover:text-transparent group-hover:font-bold transition-all duration-200">
-                        {genre}
-                    </span>
+
+                        <span className="group-hover:bg-gradient-to-br from-purple-700/80 to-blue-600/80 group-hover:bg-clip-text group-hover:text-transparent group-hover:font-bold transition-all duration-200">
+                            {genre}
+                        </span>
                     </p>
                     <div className="basis-1/2 flex justify-end gap-1">
                         {game?.platforms?.filter((platform) => (platform.platform.name === "PC") || (platform.platform.name === "PlayStation 5") || (platform.platform.name === "Xbox Series S/X")).map((platform) => (
                             <h4 className="bg-slate-700/50 font-medium rounded-md group-hover:bg-purple-500/20 group-hover:border-purple-500/50 px-2 py-1 text-sm text-slate-400 group-hover:font-bold"
-                            key={platform.platform.id}
+                                key={platform.platform.id}
                             >
                                 <span className="group-hover:bg-gradient-to-br from-purple-700/80 to-blue-600/80 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-200">
-                                   {platform.platform.name === "PlayStation 5" ? "PS5" : platform.platform.name === "Xbox Series S/X" ? "XBOX" : platform.platform.name}
+                                    {platform.platform.name === "PlayStation 5" ? "PS5" : platform.platform.name === "Xbox Series S/X" ? "XBOX" : platform.platform.name}
                                 </span>
                             </h4>
                         ))}
                     </div>
                 </div>
             </div>
+            <button className="absolute top-2 right-2 p-2 bg-slate-900/70 rounded-full hover:bg-slate-900 hover:shadow-sm hover:shadow-purple-500/60 hover:scale-105 transition-all duration-200 cursor-pointer">
+                <HeartIcon className="w-5 h-5 text-slate-400 group-hover:text-purple-400 transition-colors duration-200" />
+            </button>
         </li>
-        
+
     )
 }
