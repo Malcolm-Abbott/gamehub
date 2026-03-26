@@ -7,7 +7,7 @@ export function QuickLinks() {
     <div className="flex items-center lg:basis-1/2">
       {/* First child: logo + GameHub — no flex-grow, stays at start (justify-start by default). */}
       <div className="flex items-center gap-2">
-        <Link to="/" className="group">
+        <Link to="/" className="group" aria-label="Go to home page">
           <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg group-hover:shadow-purple-500/50 transition-all duration-300 group-hover:scale-110">
             <span className="bg-gradient-to-r from-purple-900/80 to-blue-800/80 bg-clip-text text-transparent font-bold text-lg lg:text-xl">GH</span>
           </div>
@@ -23,13 +23,13 @@ export function QuickLinks() {
         <Link
           to="/"
           className="flex items-center gap-2 hover:text-white hover:bg-slate-700/50 p-2 rounded-lg transition-all duration-200">
-          <HomeIcon size={20} className="text-slate-300" />
+          <HomeIcon size={20} className="text-slate-300" aria-hidden="true" focusable="false" />
           <div className="text-slate-300 font-medium">Home</div>
         </Link>
         <Link
           to="/favorites"
           className="flex items-center gap-2 hover:text-white hover:bg-slate-700/50 p-2 rounded-lg transition-all duration-200">
-          <HeartIcon size={20} className="text-slate-300" />
+          <HeartIcon size={20} className="text-slate-300" aria-hidden="true" focusable="false" />
           <div className="text-slate-300 font-medium">Favorites</div>
         </Link>
       </div>

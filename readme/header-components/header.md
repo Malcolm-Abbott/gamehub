@@ -17,16 +17,16 @@ The overall effect is: a dark gradient header on top of a darker gradient page b
 The header itself is very simple: it only cares about the visual bar and global layout.
 
 - **Header wrapper**:
-  - `<header className="sticky top-0 z-20 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-xl border-b border-slate-700/50 py-4">`
+  - `<header className="sticky top-0 z-20 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-xl border-b border-slate-700/50 py-4 mb-8">`
   - `sticky top-0` keeps the header stuck to the top of the viewport while scrolling; `z-20` ensures it stays above the main page content.
   - Inside it renders `<NavLinks />`.
-  - Below the header, page content is wrapped in `<div className="content-container"><Outlet /></div>` so it shares the same max-width and padding as the nav (see **Uniform container** below).
+  - Below the header, page content is wrapped in `<div className="content-container mb-8"><Outlet /></div>` so it shares the same max-width/padding as the nav and keeps consistent bottom spacing.
 
 So structurally:
 
 - **Header** (visual bar)
   - **NavLinks** (horizontal layout inside the bar, uses `content-container`)
-- **div.content-container** → **Outlet** (page content; same container for alignment)
+- **div.content-container.mb-8** → **Outlet** (page content; aligned container plus bottom spacing)
 
 ---
 
@@ -132,12 +132,10 @@ Wrapper:
 
 Hamburger menu icon:
 
-- `<MenuIcon className="lg:hidden p-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-200 size-10" />`
-  - **`lg:hidden`**: menu icon only shows on small and medium screens; disappears on large screens (where full nav is visible).
-  - **Hover behavior**:
-    - `hover:text-white`: icon turns white on hover.
-    - `hover:bg-slate-700/50`: subtle pill background on hover.
-    - `transition-all duration-200`: smooth in/out.
+- `<button type="button" aria-label="Open navigation menu" className="lg:hidden cursor-pointer">`
+  - `<MenuIcon className="p-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-all duration-200 size-10" aria-hidden="true" focusable="false" />`
+  - The button is the interactive control; the icon is decorative.
+  - **`lg:hidden`** on the button means the mobile menu control shows on small/medium screens and disappears on large screens.
 
 This combination gives:
 
@@ -154,7 +152,7 @@ Structure:
 
 **Search icon:**
 
-- `<SearchIcon size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />`
+- `<SearchIcon size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" focusable="false" />`
   - **`absolute`**: icon is taken out of normal document flow and placed on top.
   - **`left-3`**: 0.75rem from the left side of the relative container.
   - **`top-1/2`** + **`-translate-y-1/2`**:
@@ -165,6 +163,7 @@ Structure:
 **Input element:**
 
 - `<input className="w-full pl-10 pr-4 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200" />`
+  - Includes `aria-label="Search games"` so the control has an explicit accessible name.
   - **`w-full`**: takes up the full width of its parent.
   - **`pl-10`**: extra left padding so the text doesn’t overlap the icon (space for the icon + some margin).
   - **`pr-4` + `py-2.5`**: comfortable horizontal and vertical padding.
@@ -195,7 +194,7 @@ The combination of `relative` on the wrapper, `absolute` + centering utilities o
 ```css
 body {
   @apply m-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen;
-  height: 100dvh;
+  min-height: 100dvh;
 }
 ```
 

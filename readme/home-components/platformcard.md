@@ -8,23 +8,26 @@ This note walks through how **`PlatformCard`** is built in **`PlatformsHome.tsx`
 
 | Piece | Role |
 |--------|------|
-| **`PlatformsHome.tsx`** | Section: `SectionTitle` + grid of three platform cards (static fixtures). |
+| **`PlatformsHome.tsx`** | Section wrapper with local spacing: `SectionTitle` + grid of three platform cards (static fixtures). |
 | **`PlatformCard`** | Local function component: one card, implemented as a **`Link`** with utility classes for look and feel. |
 
 **Composition (current):**
 
 ```
 PlatformsHome
-├── SectionTitle  ("Browse by Platform", TrophyIcon)
-└── div (grid)
-    ├── PlatformCard(platform=pc)
-    ├── PlatformCard(platform=ps5)
-    └── PlatformCard(platform=xboxSeriesXs)
-        └── Link → /platforms/:id
-            └── div
-                ├── h3  (platform name)
-                └── p   (games_count)
+└── section (flex flex-col gap-4 lg:gap-6)
+    ├── SectionTitle  ("Browse by Platform", TrophyIcon)
+    └── div (grid)
+        ├── PlatformCard(platform=pc)
+        ├── PlatformCard(platform=ps5)
+        └── PlatformCard(platform=xboxSeriesXs)
+            └── Link → /platforms/:id
+                └── div
+                    ├── h3  (platform name)
+                    └── p   (games_count)
 ```
+
+The section wrapper keeps title-to-grid spacing local to `PlatformsHome`, separate from page-level section spacing in `Home.tsx`.
 
 ---
 
@@ -79,6 +82,7 @@ The **`PlatformsHome`** wrapper uses:
 
 | Class | What it does |
 |--------|----------------|
+| **`section.flex.flex-col.gap-4.lg:gap-6`** | Local vertical rhythm inside this section: title above cards with controlled spacing. |
 | **`grid grid-cols-1 sm:grid-cols-3`** | One column on small screens; **three columns** from the `sm` breakpoint up so PC / PS5 / Xbox sit side by side. |
 | **`gap-4`** | Consistent spacing between cards (matches other home sections’ rhythm). |
 

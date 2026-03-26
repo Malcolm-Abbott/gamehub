@@ -6,14 +6,14 @@ import { Link } from "react-router-dom";
 
 export function PlatformsHome() {
     return (
-        <>
-            <SectionTitle icon={<TrophyIcon className="w-7 h-7 text-purple-400" />} title="Browse by Platform" />
+        <section className="flex flex-col gap-4 lg:gap-6">
+            <SectionTitle icon={<TrophyIcon className="w-7 h-7 text-purple-400" aria-hidden="true" focusable="false" />} title="Browse by Platform" />
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <PlatformCard platform={pc} />
                 <PlatformCard platform={ps5} />
                 <PlatformCard platform={xboxSeriesXs} />
             </div>
-        </>
+        </section>
     )
 }
 

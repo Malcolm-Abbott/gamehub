@@ -1,106 +1,119 @@
-# Home page sections: `SectionTitle` and reusable patterns
+# `SectionTitle` component structure
 
-This note describes how the **Home** page composes its layout, how **`SectionTitle`** provides a shared header for browse sections, and why **`React.ReactNode`** is a good fit for passing icons as props.
+This note documents the current implementation of `SectionTitle` with a focus on TypeScript props, JSX structure, and Tailwind class usage.
 
 ---
 
-## Where this lives in the app
+## File location
 
-| Piece | Role |
-|--------|------|
-| **`Home.tsx`** | Top-level page: loading/error handling, vertical spacing, and ordered list of major blocks (`Hero`, then each browse section). |
-| **`Hero.tsx`** | The primary visual banner at the top of the home route (includes the page’s main `h1`). |
-| **`SectionTitle.tsx`** | Small presentational component: icon + styled title text for section headers. |
-| **`GenresHome.tsx`**, **`PlatformsHome.tsx`**, **`FeaturedHome.tsx`** | Each section owns its header (via `SectionTitle`) and will own its body content (lists, carousels, data fetching) as you build them out. |
+- `client/src/Pages/Home/SectionTitle.tsx`
 
-**Composition flow (mental model):**
+---
 
-```
-Home
-├── Hero
-├── GenresHome     → SectionTitle + (future body)
-├── PlatformsHome  → SectionTitle + (future body)
-└── FeaturedHome   → SectionTitle + (future body)
+## TypeScript API
+
+```ts
+type SectionTitleProps = {
+  icon: React.ReactNode;
+  title: string;
+  addClass?: string;
+  genre?: RawgGenre;
+}
 ```
 
----
+- `icon`: render slot for any JSX passed from parent (typically a Lucide icon element).
+- `title`: heading text shown in the gradient title span.
+- `addClass`: optional extra utility classes appended to the `h2`.
+- `genre`: optional object used to render the secondary "Games Found" row.
 
-## What `SectionTitle` does
-
-`SectionTitle` is a **single place** to define how a section header looks:
-
-- An **icon** on the left  
-- A **title string** with the gradient text treatment  
-- Semantic markup: it renders an **`h2`**, because the page already uses **`h1`** once in `Hero` (“Discover Amazing Games”). That keeps one clear heading outline for assistive tech and SEO.
-
-Callers pass **what** to show (which icon, which words); `SectionTitle` does not know about genres vs platforms vs featured—it only knows how to render “icon + title” consistently.
+`RawgGenre` is imported as a type from `../../api/genres`, which keeps the prop shape aligned with API data.
 
 ---
 
-## Props: `title` and `icon`
+## React / JSX structure
 
-### `title: string`
+The component returns a vertical stack:
 
-Plain text for the section label, e.g. `"Browse by Genre"`. Simple, predictable, and easy to type-check.
+1. Root `<section className="flex flex-col">`
+2. `<h2>` containing:
+   - icon node (`{icon}`)
+   - title `<span>` with gradient text classes
+3. Conditional `<p>` rendered only when `genre` exists:
+   - nested `<span>` for gradient number
+   - static label text: `Games Found`
 
-### `icon: React.ReactNode`
+The conditional branch is:
 
-The `icon` prop is typed as **`React.ReactNode`**. That means: *anything React can render* is allowed—not only strings or numbers, but also **elements**, **fragments**, and **components that produce output**.
+```tsx
+{genre ? (
+  <p>...</p>
+) : null}
+```
 
-#### Why not `string` for the icon?
+This keeps the metadata row out of the DOM when genre data is not available.
 
-Icons from libraries like **Lucide** are not strings; they are **React components**. You use them by writing JSX, e.g. `<Gamepad2Icon className="w-7 h-7" />`. That expression evaluates to a **React element**. If `icon` were only a `string`, you could not pass that element without extra machinery (like a map from names to components).
+---
 
-#### What `React.ReactNode` includes (intuition)
+## Tailwind class breakdown
 
-Roughly:
+### Root container
 
-- `null` / `undefined` / booleans (often ignored when rendering)
-- Strings and numbers
-- React elements (what you get from `<SomeIcon />`)
-- Arrays of the above
-- Portals, etc.
+- `flex flex-col`: vertical flow for heading row then optional metadata row.
 
-So for `icon`, the practical meaning is: **“slot for whatever JSX you want next to the title,”** most often a Lucide icon with `className` for size and color.
+### Heading (`h2`)
 
-#### How the parent passes a Lucide icon
+- `flex`: icon and title are aligned on one flex row.
+- `flex-wrap`: allows icon/title content to wrap on narrow widths.
+- `items-center`: vertical alignment of icon and text.
+- `gap-3`: consistent spacing between icon and title.
+- `text-2xl lg:text-3xl`: base heading size across breakpoints.
+- `font-bold`: heading weight.
+- `leading-normal lg:leading-[1.2]`: line-height tuned for large text and descenders.
+- `${addClass ?? ""}`: extends styling from parent contexts.
 
-The **parent** imports the icon component and **instantiates** it in JSX, then passes that element as the `icon` prop:
+### Title text (`span`)
+
+- `bg-gradient-to-r from-blue-400 to-purple-400`: gradient background source.
+- `bg-clip-text text-transparent`: clips gradient into text glyphs.
+- `pb-1`: small visual buffer at the bottom of glyphs.
+
+### Metadata row (`p`)
+
+- `text-slate-400 text-lg font-medium`: subdued secondary text styling.
+
+### Metadata number (`p > span`)
+
+- `bg-gradient-to-t from-purple-400 to-blue-400 bg-clip-text text-transparent`: gradient number treatment.
+- `font-bold`: emphasis for numeric count.
+
+---
+
+## Usage pattern from parent components
+
+Parents pass an instantiated icon element and title text:
 
 ```tsx
 <SectionTitle
-  icon={<Gamepad2Icon className="w-7 h-7 text-purple-400" />}
-  title="Browse by Genre"
+  icon={<Gamepad2Icon className="w-10 h-10 text-purple-400 lg:w-16 lg:h-16" aria-hidden="true" focusable="false" />}
+  title={genre?.name ?? ""}
+  addClass="text-3xl lg:text-5xl"
+  genre={genre}
 />
 ```
 
-- **`Gamepad2Icon`** is a component (a function or class React can render).  
-- **`<Gamepad2Icon ... />`** is an **element**: “please render this component with these props.”  
-- That element is the value of `icon` inside `SectionTitle`.
-
-Inside `SectionTitle`, **`{icon}`** in JSX means “render whatever was passed here,” same as `{children}` would for nested content.
-
-#### Alternative: pass the component type instead of an element
-
-Another valid pattern is to pass **`Icon` as a component** (e.g. `React.ComponentType<{ className?: string }>`) and let `SectionTitle` do `<Icon className="..." />`. That centralizes size classes but is slightly more abstract. Using **`React.ReactNode`** and passing **pre-built JSX** is often easier to read at the call site because you see the exact icon and classes in one place.
+This keeps `SectionTitle` presentational while allowing each page/section to control icon choice and size overrides.
 
 ---
 
-## File reference (current structure)
+## Home spacing model
 
-- **`client/src/Pages/Home/SectionTitle.tsx`** — defines `SectionTitleProps` and the `h2` layout.  
-- **`client/src/Pages/Home/GenresHome.tsx`** — imports `Gamepad2Icon`, passes it into `SectionTitle` with `title="Browse by Genre"`.  
-- **`client/src/Pages/Home/PlatformsHome.tsx`** — same pattern for the platform section.  
-- **`client/src/Pages/Home/FeaturedHome.tsx`** — same pattern for featured games.  
-- **`client/src/Pages/Home/Home.tsx`** — imports and renders `Hero`, then `GenresHome`, `PlatformsHome`, `FeaturedHome` in order.
+Home layout uses two independent spacing layers:
 
----
+- **Page-level section spacing** in `Home.tsx`:
+  - `div className="flex flex-col gap-12 lg:gap-16"`
+  - Controls vertical distance between `Hero`, `GenresHome`, `PlatformsHome`, and `FeaturedHome`.
+- **Section-level internal spacing** in each section component:
+  - `section className="flex flex-col gap-4 lg:gap-6"`
+  - Controls distance between `SectionTitle` and that section's own card/content grid.
 
-## What to add next (without changing the pattern)
-
-Each of **`GenresHome`**, **`PlatformsHome`**, and **`FeaturedHome`** can grow by:
-
-1. Keeping **`SectionTitle`** at the top for a consistent header.  
-2. Adding **siblings below** (or wrapping both in a `<section>`) for lists, grids, loading states, and API calls specific to that block.
-
-`SectionTitle` stays small; **section files** stay responsible for **data and layout of the body**—a clear separation that scales as the app grows.
+This separation lets you increase room between major sections without creating oversized gaps between titles and their immediate content.
