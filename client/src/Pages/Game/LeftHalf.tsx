@@ -23,7 +23,7 @@ export function LeftHalf({ game, trailers }: LeftHalfProps) {
                     <PlayIcon className="w-6 h-6 text-purple-400" />
                     <h2 className="text-2xl font-bold text-white">Watch Trailer</h2>
                 </div>
-                <div className="relative aspect-video overflow-hidden rounded-2xl cursor-pointer border border-slate-700/10">
+                <div className={`relative aspect-video overflow-hidden rounded-2xl border border-slate-700/10${trailerUrl ? " cursor-pointer" : ""}`}>
                     <>
                         {trailerUrl ? (
                             <video
@@ -42,7 +42,7 @@ export function LeftHalf({ game, trailers }: LeftHalfProps) {
                         {!isPlaying && (
                             <button
                                 type="button"
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-purple-400 cursor-pointer"
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-purple-400"
                                 onClick={trailerUrl ? () => void videoRef.current?.play() : undefined}
                                 aria-label={trailerUrl ? "Play trailer" : "Trailer unavailable"}
                             >
