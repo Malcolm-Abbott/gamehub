@@ -40,16 +40,14 @@ export function Genres() {
 
 
     return (
-        <>
-            <div className="flex flex-col gap-6 lg:gap-8">
-                <BackToHome />
-                <SectionTitle icon={<Gamepad2Icon className="w-10 h-10 text-purple-400 lg:w-16 lg:h-16" aria-hidden="true" focusable="false" />} title={genre?.name ?? ""} addClass="text-3xl lg:text-5xl" genre={genre} />
-                <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {games.map((game) => (
-                        <GameCard key={game.id} game={game} genre={genre?.name ?? ""} />
-                    ))}
-                </ul>
-            </div>
-        </>
+        <div className="flex flex-col gap-6 lg:gap-8">
+            <BackToHome />
+            <SectionTitle icon={<Gamepad2Icon className="w-10 h-10 text-purple-400 lg:w-16 lg:h-16" aria-hidden="true" focusable="false" />} title={genre?.name ?? ""} addClass="text-3xl lg:text-5xl" genre={genre} />
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {games.map((game) => (
+                    <GameCard key={game.id} game={game} genre={genre?.name ?? ""} />
+                ))}
+            </ul>
+        </div>
     )
 }
