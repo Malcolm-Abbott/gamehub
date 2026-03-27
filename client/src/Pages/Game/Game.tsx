@@ -44,9 +44,11 @@ export function Game() {
     return (
         <div className="flex flex-col gap-6 lg:gap-8">
             <BackToHome />
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
                 <LeftHalf game={game} trailers={trailer} />
-                <RightHalf />
+                <div className="hidden lg:block">
+                    <RightHalf />
+                </div>
             </div>
         </div>
     )

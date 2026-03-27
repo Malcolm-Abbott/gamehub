@@ -2,6 +2,7 @@ import type { RawgGameDetail } from "../../api/games";
 import { PlayIcon } from "lucide-react";
 import type { RawgGameMovie } from "../../api/trailers";
 import { useState, useRef } from "react";
+import { RightHalf } from "./RightHalf";
 
 interface LeftHalfProps {
     game: RawgGameDetail;
@@ -17,6 +18,9 @@ export function LeftHalf({ game, trailers }: LeftHalfProps) {
         <div className="flex flex-col gap-6 lg:gap-8">
             <div className="aspect-rectangle overflow-hidden rounded-2xl border border-slate-700/50">
                 <img src={game?.background_image ?? ""} alt={game.name} className="w-full h-full object-cover" />
+            </div>
+            <div className="lg:hidden">
+                <RightHalf />
             </div>
             <div className="p-4 flex flex-col gap-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700/50">
                 <div className="flex items-center gap-4">
@@ -42,7 +46,7 @@ export function LeftHalf({ game, trailers }: LeftHalfProps) {
                         {!isPlaying && (
                             <button
                                 type="button"
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-purple-400"
+                                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-purple-400${trailerUrl ? " cursor-pointer" : ""}`}
                                 onClick={trailerUrl ? () => void videoRef.current?.play() : undefined}
                                 aria-label={trailerUrl ? "Play trailer" : "Trailer unavailable"}
                             >
