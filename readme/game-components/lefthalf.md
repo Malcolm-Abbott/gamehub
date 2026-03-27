@@ -1,18 +1,14 @@
-# `LeftHalf` component structure (Game page)
+# `LeftHalf` component (Game page — left column)
 
 **Location:** `client/src/Pages/Game/LeftHalf.tsx`  
 **Stack:** React + TypeScript + Tailwind CSS  
-**Purpose:** Render the left column of the game detail page (hero image + trailer block with play overlay behavior).
+**Purpose:** Compose the left column of the game detail page: hero image, responsive `RightHalf` slot, and the “Watch Trailer” card (title + `<Trailer />`).
 
 ---
 
-## 1. Component role and prop contract
+## 1. Role and prop contract
 
-`LeftHalf` is a presentational/detail component that receives game/trailer data from `Game.tsx` and renders:
-
-- A large game background image.
-- A "Watch trailers" section title with icon.
-- A `<video controls>` player with a conditional play overlay button.
+`LeftHalf` is a **layout / composition** component. It receives **`game`** and **`trailers`** from `Game.tsx`, derives the first trailer’s **URL** and **poster**, and passes those primitives into **`Trailer`** so playback state stays encapsulated inside the trailer UI.
 
 ### TypeScript interface
 
@@ -23,139 +19,133 @@ interface LeftHalfProps {
 }
 ```
 
-- **`game`**: supplies `background_image` and `name`.
-- **`trailers`**: array source for trailer video URL and preview image.
+| Prop | Source (typical) | Used for |
+|------|------------------|----------|
+| `game` | `fetchGameById` (`RawgGameDetail`) | `GameImage` (`background_image`, `name`) |
+| `trailers` | `fetchGameTrailers` (`RawgGameMovie[]`) | Derive `trailerUrl` + `preview` for `Trailer` |
 
 ---
 
-## 2. High-level JSX structure
+## 2. Visual component tree
+
+Think of the page as a **vertical stack**; on large screens, `RightHalf` also appears in a **sibling column** in `Game.tsx` (see layout note below).
 
 ```txt
 LeftHalf
-└── div (column wrapper)
-    ├── div (game hero image container)
-    │   └── img (game background)
-    └── div (trailer card)
-        ├── div (section header: icon + title)
-        └── div (video wrapper)
-            ├── video (native controls)
-            └── button (PlayIcon overlay; only when not playing)
+└── div.flex.flex-col                    ← column wrapper (gap-6 / lg:gap-8)
+    ├── GameImage                        ← hero / background art
+    ├── div.lg:hidden                    ← mobile / tablet only
+    │   └── RightHalf
+    └── div (trailer card shell)
+        ├── WatchTrailerTitle            ← icon + “Watch Trailer” heading
+        └── Trailer                      ← 16:9 video + overlay (owns state)
+```
+
+### Responsive layout (where `RightHalf` lives)
+
+`Game.tsx` places **`LeftHalf`** and **`RightHalf`** in a grid at `lg+`. Inside **`LeftHalf`**, **`RightHalf`** is rendered **only below `lg`** so small viewports still see metadata without an empty column.
+
+```txt
+viewport < lg                         viewport ≥ lg (simplified)
+┌─────────────────────┐              ┌──────────────┬──────────────┐
+│ GameImage           │              │ LeftHalf     │ RightHalf    │
+│ RightHalf (here)    │              │ (no in-slot  │ (column)     │
+│ Trailer card        │              │  RightHalf)  │              │
+└─────────────────────┘              └──────────────┴──────────────┘
 ```
 
 ---
 
-## 3. React state and refs
+## 3. Data flow (parent → children)
 
-The component uses one piece of state and one ref:
+`LeftHalf` does **not** own `isPlaying` or `videoRef` — those live inside **`Trailer`**. The parent only **normalizes API data** into strings the trailer block can consume.
 
 ```tsx
-const [isPlaying, setIsPlaying] = useState(false);
-const videoRef = useRef<HTMLVideoElement>(null);
+// Derived once per render from RAWG-shaped `trailers`
+const trailerUrl = trailers[0]?.data["max"] ?? trailers[0]?.data["480"];
+const preview = trailers[0]?.preview ?? "";
 ```
 
-- **`isPlaying`** controls whether the overlay play button is rendered.
-- **`videoRef`** gives imperative access to the video element (`play()`).
+```txt
+trailers: RawgGameMovie[]
+        │
+        ├─► trailers[0]?.data["max"] ?? trailers[0]?.data["480"]  ──► trailerUrl  ──► Trailer
+        └─► trailers[0]?.preview ?? ""                              ──► preview   ──► Trailer
+```
 
-Playback events drive state:
+**Example** (shape only — URLs illustrative):
 
 ```tsx
-onPlay={() => setIsPlaying(true)}
-onPause={() => setIsPlaying(false)}
-onEnded={() => setIsPlaying(false)}
+<Trailer trailerUrl={trailerUrl} preview={preview} />
 ```
 
-This keeps UI and actual media state aligned.
+When there is no first movie or no `max`/`480` URL, `trailerUrl` is **falsy** at runtime; **`Trailer`** handles empty / unavailable UI internally (see [`trailer.md`](./trailer.md)).
 
 ---
 
-## 4. Trailer source and poster selection
+## 4. File structure (split components)
 
-Current fallback chain:
+| File | Responsibility |
+|------|----------------|
+| `LeftHalf.tsx` | Column layout, derive `trailerUrl` / `preview`, compose children |
+| `GameImage.tsx` | Framed hero `img` (aspect + border + cover) |
+| `WatchTrailerTitle.tsx` | Section heading row (Play icon + title) |
+| `Trailer.tsx` | 16:9 area, `<video>`, placeholder, overlay button, local state/ref |
+| `RightHalf.tsx` | Right-column content (also mirrored under `lg` here) |
+
+---
+
+## 5. `LeftHalf` JSX (reference)
 
 ```tsx
-<video
-  src={trailers[0]?.data["max"] ?? trailers[0]?.data["480"]}
-  poster={trailers[0]?.preview ?? ""}
-  // ...
-/>
+export function LeftHalf({ game, trailers }: LeftHalfProps) {
+    const trailerUrl = trailers[0]?.data["max"] ?? trailers[0]?.data["480"];
+    const preview = trailers[0]?.preview ?? "";
+
+    return (
+        <div className="flex flex-col gap-6 lg:gap-8">
+            <GameImage src={game?.background_image ?? ""} alt={game?.name} />
+            <div className="lg:hidden">
+                <RightHalf />
+            </div>
+            <div className="p-4 flex flex-col gap-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700/50">
+                <WatchTrailerTitle />
+                <Trailer trailerUrl={trailerUrl} preview={preview} />
+            </div>
+        </div>
+    );
+}
 ```
 
-- Prefers `max` trailer quality.
-- Falls back to `480` quality if `max` is missing.
-- Uses `preview` for poster fallback to empty string.
+---
+
+## 6. Tailwind — outer column + trailer card
+
+### Column wrapper
+
+| Classes | Effect |
+|---------|--------|
+| `flex flex-col gap-6 lg:gap-8` | Vertical stack; slightly larger gap from `lg` up. |
+
+### Trailer card shell (wraps title + `Trailer`)
+
+| Classes | Effect |
+|---------|--------|
+| `p-4 flex flex-col gap-4` | Padding; vertical stack of header + player. |
+| `bg-gradient-to-br from-slate-800 to-slate-900` | Dark diagonal gradient (GameHub panel look). |
+| `rounded-2xl border border-slate-700/50` | Rounded card with soft border. |
 
 ---
 
-## 5. Play overlay behavior
+## 7. Accessibility & semantics
 
-The overlay button only appears when media is not currently playing:
-
-```tsx
-{!isPlaying && (
-  <button
-    type="button"
-    className="play-overlay absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-purple-400 cursor-pointer"
-    onClick={() => void videoRef.current?.play()}
-    aria-label="Play trailer"
-  >
-    <PlayIcon className="w-8 h-8" aria-hidden="true" focusable="false" />
-  </button>
-)}
-```
-
-- **`void`** intentionally ignores the `play()` promise return value.
-- **Button semantics** improve accessibility vs a plain clickable icon.
-- **`aria-label`** gives an accessible control name.
-- Icon is decorative (`aria-hidden`, `focusable="false"`).
+- **`GameImage`:** receives `alt={game?.name}` for the hero image.
+- **Section title:** `WatchTrailerTitle` uses a real **`<h2>`** for the “Watch Trailer” heading (see that file).
+- **Trailer controls:** overlay **`button`**, `aria-label`, and unavailable copy are implemented in **`Trailer`** (see [`trailer.md`](./trailer.md)).
 
 ---
 
-## 6. Tailwind layout/styling breakdown
+## 8. Related docs
 
-### Outer column
-
-| Area | Classes | Effect |
-|------|---------|--------|
-| Layout | `flex flex-col gap-6 lg:gap-8` | Vertical stack with larger spacing on `lg+`. |
-
-### Game image container
-
-| Area | Classes | Effect |
-|------|---------|--------|
-| Frame | `aspect-rectangle overflow-hidden rounded-2xl border border-slate-700/50` | Fixed ratio frame, clipped corners, subtle border. |
-| Image | `w-full h-full object-cover` | Full fill with crop behavior preserved. |
-
-### Trailer card and header
-
-| Area | Classes | Effect |
-|------|---------|--------|
-| Card shell | `p-4 flex flex-col gap-4 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700/50` | Dark gradient card with spacing and rounded border. |
-| Header row | `flex items-center gap-4` | Icon and title aligned in one row. |
-| Header icon | `w-6 h-6 text-purple-400` | Accent icon color/size. |
-| Title | `text-2xl font-bold text-white` | Section heading emphasis. |
-
-### Video wrapper
-
-| Area | Classes | Effect |
-|------|---------|--------|
-| Wrapper | `relative aspect-video overflow-hidden rounded-2xl cursor-pointer border border-slate-700/50` | Positions overlay absolutely within a 16:9 clipped frame. |
-| Video | `w-full h-full object-cover` | Video fills frame with cover behavior. |
-| Overlay button | `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2` | Centers play button over video. |
-
----
-
-## 7. Accessibility details
-
-- Interactive overlay uses a semantic **`<button type="button">`**.
-- Explicit control label: **`aria-label="Play trailer"`**.
-- Decorative icon is hidden from assistive tech.
-- Native video controls retain built-in keyboard and screen-reader support.
-
----
-
-## 8. Notes for future hardening
-
-- Add explicit empty-state handling when `trailers` is empty.
-- Add fallback UI when trailer URL or preview is missing/invalid.
-- Optional: include a non-video placeholder panel with copy like "Trailer unavailable."
-
+- **Trailer player behavior, overlay, Tailwind detail:** [`trailer.md`](./trailer.md)
+- **Fetching games / trailers (API):** [`../fetchlogic.md`](../fetchlogic.md)
