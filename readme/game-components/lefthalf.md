@@ -90,7 +90,7 @@ When there is no first movie or no `max`/`480` URL, `trailerUrl` is **falsy** at
 | `LeftHalf.tsx` | Column layout, derive `trailerUrl` / `preview`, compose children |
 | `GameImage.tsx` | Framed hero `img` (aspect + border + cover) — see [`gameimage.md`](./gameimage.md) |
 | `WatchTrailerTitle.tsx` | Section heading row (Play icon + title) — see [`watchtrailertitle.md`](./watchtrailertitle.md) |
-| `Trailer.tsx` | 16:9 area, `<video>`, placeholder, overlay button, local state/ref |
+| `Trailer.tsx` | 16:9 area, `<video>`, placeholder, centered overlay (`group` + gradient play pill + `PlayIcon` on `sm+`), local state/ref — see [`trailer.md`](./trailer.md) |
 | `RightHalf.tsx` | Right-column content (also mirrored under `lg` here) — see [`righthalf.md`](./righthalf.md) |
 
 ---

@@ -11,13 +11,13 @@ export function Trailer({ trailerUrl, preview }: TrailerProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     return (
-        <div className={`relative aspect-video overflow-hidden rounded-2xl border border-slate-700/10${trailerUrl ? " cursor-pointer" : ""}`}>
+        <div className={`group relative aspect-video overflow-hidden rounded-2xl border border-slate-700/10${trailerUrl ? " cursor-pointer" : ""}`}>
             <>
                 {trailerUrl ? (
                     <video
                         src={trailerUrl}
                         poster={preview || ""}
-                        className="w-full h-full object-cover"
+                        className="group w-full h-full object-cover"
                         controls
                         ref={videoRef}
                         onPlay={() => setIsPlaying(true)}
@@ -30,12 +30,14 @@ export function Trailer({ trailerUrl, preview }: TrailerProps) {
                 {!isPlaying && (
                     <button
                         type="button"
-                        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-purple-400${trailerUrl ? " cursor-pointer" : ""}`}
+                        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2${trailerUrl ? " cursor-pointer" : ""}`}
                         onClick={trailerUrl ? () => void videoRef.current?.play() : undefined}
                         aria-label={trailerUrl ? "Play trailer" : "Trailer unavailable"}
                     >
                         {trailerUrl ? (
-                            <PlayIcon className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:w-10" aria-hidden="true" focusable="false" />
+                            <div className="flex items-center justify-center hidden sm:block bg-gradient-to-br from-purple-800/70 via-slate-800/70 to-blue-700/70 rounded-full p-2 group-hover:from-purple-900/80 group-hover:via-slate-900/80 group-hover:to-blue-800/80 transition-all duration-200">
+                                <PlayIcon className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:w-10 text-violet-600 group-hover:text-blue-600 transition-colors duration-450" aria-hidden="true" focusable="false" />
+                            </div>
                         ) : (
                             <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-center font-bold text-transparent text-xl sm:text-2xl">
                                 Trailer Unavailable

@@ -87,26 +87,28 @@ So when the user uses **native controls** to play/pause/stop, the overlay stays 
 
 ```txt
 Trailer
-└── div.relative.aspect-video …          ← 16:9 frame + positioning context
+└── div.group.relative.aspect-video …    ← 16:9 frame; `group` for hover on children
     └── <> (fragment)
-        ├── [trailerUrl] video           ← full-bleed player
+        ├── [trailerUrl] video             ← full-bleed player (`w-full h-full object-cover`)
         │       OR
-        │   div.absolute.inset-0         ← dark slab when no URL
-        └── [ !isPlaying ] button        ← centered overlay
-                ├── PlayIcon             ← when URL exists
-                └── span (gradient text) ← “Trailer Unavailable”
+        │   div.absolute.inset-0           ← dark slab when no URL
+        └── [ !isPlaying ] button          ← centered overlay
+                ├── [trailerUrl] div       ← gradient pill (`hidden sm:block`); wraps icon
+                │       └── PlayIcon
+                └── span (gradient text)   ← “Trailer Unavailable”
 ```
 
 **ASCII layout (conceptual):**
 
 ```txt
 ┌──────────────────────────────────────────────┐
-│  relative + aspect-video (16:9)             │
+│  group + relative + aspect-video (16:9)      │
 │  ┌──────────────────────────────────────────┐│
 │  │ video (object-cover) OR dark placeholder ││
-│  │            ┌──────┐                       ││
-│  │            │ btn  │  absolute center      ││
-│  │            └──────┘                       ││
+│  │         ┌────────────┐                    ││
+│  │         │ btn: pill +│  absolute center  ││
+│  │         │   PlayIcon │                    ││
+│  │         └────────────┘                    ││
 │  └──────────────────────────────────────────┘│
 └──────────────────────────────────────────────┘
 ```
@@ -122,7 +124,7 @@ Trailer
     <video
         src={trailerUrl}
         poster={preview || ""}
-        className="w-full h-full object-cover"
+        className="group w-full h-full object-cover"
         controls
         ref={videoRef}
         onPlay={() => setIsPlaying(true)}
@@ -133,6 +135,8 @@ Trailer
     <div className="absolute inset-0 bg-slate-900/80" aria-hidden />
 )}
 ```
+
+The extra **`group`** on **`<video>`** is redundant for the overlay (the outer frame already has **`group`**); it can be removed in a cleanup pass without changing hover behavior.
 
 | Branch | What the user sees |
 |--------|---------------------|
@@ -147,14 +151,20 @@ The placeholder **`div`** is decorative; **`aria-hidden`** avoids extra noise fo
 {!isPlaying && (
     <button
         type="button"
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-purple-400${trailerUrl ? " cursor-pointer" : ""}`}
+        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2${trailerUrl ? " cursor-pointer" : ""}`}
         onClick={trailerUrl ? () => void videoRef.current?.play() : undefined}
         aria-label={trailerUrl ? "Play trailer" : "Trailer unavailable"}
     >
         {trailerUrl ? (
-            <PlayIcon className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:w-10" aria-hidden="true" focusable="false" />
+            <div className="flex items-center justify-center hidden sm:block bg-gradient-to-br from-purple-800/70 via-slate-800/70 to-blue-700/70 rounded-full p-2 group-hover:from-purple-900/80 group-hover:via-slate-900/80 group-hover:to-blue-800/80 transition-all duration-200">
+                <PlayIcon
+                    className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:w-10 text-violet-600 group-hover:text-blue-600 transition-colors duration-450"
+                    aria-hidden="true"
+                    focusable="false"
+                />
+            </div>
         ) : (
-            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-center font-bold text-transparent md:text-xl">
+            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-center font-bold text-transparent text-xl sm:text-2xl">
                 Trailer Unavailable
             </span>
         )}
@@ -164,15 +174,22 @@ The placeholder **`div`** is decorative; **`aria-hidden`** avoids extra noise fo
 
 | Condition | Overlay content | `onClick` |
 |-----------|-----------------|-----------|
-| `trailerUrl` truthy | **Play icon** (purple via `text-purple-400` on button → Lucide `currentColor`) | `videoRef.current?.play()` |
-| `trailerUrl` falsy | **Gradient text** “Trailer Unavailable” | `undefined` (not interactive as a play action) |
+| `trailerUrl` truthy | **Rounded gradient pill** + **`PlayIcon`** (`text-violet-600` → **`group-hover:text-blue-600`** on the SVG; pill gradient stops deepen on **`group-hover`**) | `videoRef.current?.play()` |
+| `trailerUrl` falsy | **Gradient text** “Trailer Unavailable” (`text-xl sm:text-2xl`) | `undefined` (not interactive as a play action) |
 
 **`void`** in `void videoRef.current?.play()` discards the `Promise` from `HTMLMediaElement.play()` intentionally (no unhandled promise in strict setups).
 
 **Why `cursor-pointer` is conditional on `trailerUrl`**
 
-- The **wrapper** and **button** add `cursor-pointer` only when a play action exists.
-- **`<button>`** may use the user-agent cursor; setting **`text-purple-400`** on the button sets **`color`** / **`currentColor`** for the icon. See also parent wrapper class on the outer `div` in the source file.
+- The **outer frame** and **button** add **`cursor-pointer`** only when a playable trailer exists.
+
+**`group` on the outer frame**
+
+- The **`aspect-video`** wrapper uses **`group`** so **`group-hover:`** on the pill and icon fires when the pointer is anywhere over the trailer region (video + overlay), not only on the icon.
+
+**Responsive play affordance**
+
+- The pill + icon use **`hidden sm:block`**: below the **`sm`** breakpoint the centered **button** is still present for accessibility, but the visible pill/icon stack is hidden; narrow layouts may rely on tapping the video / controls (consider a dedicated small-screen treatment if you need a visible play cue on all widths).
 
 ---
 
@@ -182,6 +199,7 @@ The placeholder **`div`** is decorative; **`aria-hidden`** avoids extra noise fo
 
 | Classes | Effect |
 |---------|--------|
+| `group` | Hover scope for **`group-hover:`** on the play pill and **`PlayIcon`** when the pointer is over the trailer region. |
 | `relative` | Positioning context for **`absolute`** children (placeholder + overlay). |
 | `aspect-video` | **16:9** box; height follows width. |
 | `overflow-hidden` | Clips video/corners. |
@@ -195,6 +213,7 @@ The placeholder **`div`** is decorative; **`aria-hidden`** avoids extra noise fo
 |---------|--------|
 | `w-full h-full` | Fills the aspect box. |
 | `object-cover` | Covers the frame (crop if aspect differs). |
+| `group` | Currently present on **`<video>`**; redundant with the outer **`group`** (safe to remove). |
 
 ### Placeholder (no URL)
 
@@ -208,7 +227,27 @@ The placeholder **`div`** is decorative; **`aria-hidden`** avoids extra noise fo
 | Classes | Effect |
 |---------|--------|
 | `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2` | **Dead-center** in the frame. |
-| `text-purple-400` | Theme accent; Lucide strokes use **`currentColor`**. |
+| `cursor-pointer` (conditional) | When **`trailerUrl`** is set. |
+
+### Play pill wrapper (`div` around `PlayIcon`)
+
+| Classes | Effect |
+|---------|--------|
+| `hidden sm:block` | Pill + icon visible from **`sm`** breakpoint up. |
+| `flex items-center justify-center` | Centers the icon in the circle. |
+| `bg-gradient-to-br from-purple-800/70 via-slate-800/70 to-blue-700/70` | Default triple-stop gradient. |
+| `rounded-full p-2` | Circular chip around the icon. |
+| `group-hover:from-purple-900/80 group-hover:via-slate-900/80 group-hover:to-blue-800/80` | Darker / richer stops when the **`.group`** frame is hovered. |
+| `transition-all duration-200` | Intended to ease property changes on the pill (gradient stop animation is limited in browsers; **transform** / **opacity** additions would tween more reliably). |
+
+### `PlayIcon` (Lucide SVG)
+
+| Classes | Effect |
+|---------|--------|
+| `w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:w-10` | Responsive icon size. |
+| `text-violet-600` | Default stroke via **`currentColor`**. |
+| `group-hover:text-blue-600` | Color shift when the outer **`group`** is hovered. |
+| `transition-colors duration-450` | Color transition timing on the icon (use a theme **`duration-*`** token or **`duration-[450ms]`** if **`450`** is not in your Tailwind config). |
 
 ### Unavailable copy (`span`)
 
@@ -216,7 +255,7 @@ The placeholder **`div`** is decorative; **`aria-hidden`** avoids extra noise fo
 |---------|--------|
 | `bg-gradient-to-r from-purple-400 to-blue-400` | Gradient “ink.” |
 | `bg-clip-text text-transparent` | Clip gradient to text glyphs. |
-| `text-center font-bold md:text-xl` | Typography; responsive size. |
+| `text-center font-bold text-xl sm:text-2xl` | Typography; steps up at **`sm`**. |
 
 ---
 
