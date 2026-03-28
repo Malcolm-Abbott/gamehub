@@ -156,7 +156,7 @@ The placeholder **`div`** is decorative; **`aria-hidden`** avoids extra noise fo
         aria-label={trailerUrl ? "Play trailer" : "Trailer unavailable"}
     >
         {trailerUrl ? (
-            <div className="flex items-center justify-center hidden sm:block bg-gradient-to-br from-purple-800/70 via-slate-800/70 to-blue-700/70 rounded-full p-2 group-hover:from-purple-900/80 group-hover:via-slate-900/80 group-hover:to-blue-800/80 transition-all duration-200">
+            <div className="flex items-center justify-center hidden sm:block bg-gradient-to-br from-slate-700/90 via-slate-900 to-slate-700/90 border border-slate-900/20 rounded-full p-2 group-hover:bg-gradient-to-br group-hover:from-purple-900/80 group-hover:via-slate-900/80 group-hover:to-blue-800/80 transition-all duration-200">
                 <PlayIcon
                     className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:w-10 text-violet-600 group-hover:text-blue-600 transition-colors duration-450"
                     aria-hidden="true"
@@ -174,7 +174,7 @@ The placeholder **`div`** is decorative; **`aria-hidden`** avoids extra noise fo
 
 | Condition | Overlay content | `onClick` |
 |-----------|-----------------|-----------|
-| `trailerUrl` truthy | **Rounded gradient pill** + **`PlayIcon`** (`text-violet-600` → **`group-hover:text-blue-600`** on the SVG; pill gradient stops deepen on **`group-hover`**) | `videoRef.current?.play()` |
+| `trailerUrl` truthy | **Rounded pill** + **`PlayIcon`**: default **symmetric slate** gradient (`slate-700/90` → `slate-900` → `slate-700/90`) + subtle border; on **`group-hover`**, pill switches to **purple / slate / blue** gradient and icon **`text-violet-600` → `text-blue-600`** | `videoRef.current?.play()` |
 | `trailerUrl` falsy | **Gradient text** “Trailer Unavailable” (`text-xl sm:text-2xl`) | `undefined` (not interactive as a play action) |
 
 **`void`** in `void videoRef.current?.play()` discards the `Promise` from `HTMLMediaElement.play()` intentionally (no unhandled promise in strict setups).
@@ -235,10 +235,11 @@ The placeholder **`div`** is decorative; **`aria-hidden`** avoids extra noise fo
 |---------|--------|
 | `hidden sm:block` | Pill + icon visible from **`sm`** breakpoint up. |
 | `flex items-center justify-center` | Centers the icon in the circle. |
-| `bg-gradient-to-br from-purple-800/70 via-slate-800/70 to-blue-700/70` | Default triple-stop gradient. |
+| `bg-gradient-to-br from-slate-700/90 via-slate-900 to-slate-700/90` | Default **symmetric slate** disc; semi-transparent ends keep a hint of video behind the pill. |
+| `border border-slate-900/20` | Soft edge (subtle on dark footage; can be bumped for more separation). |
 | `rounded-full p-2` | Circular chip around the icon. |
-| `group-hover:from-purple-900/80 group-hover:via-slate-900/80 group-hover:to-blue-800/80` | Darker / richer stops when the **`.group`** frame is hovered. |
-| `transition-all duration-200` | Intended to ease property changes on the pill (gradient stop animation is limited in browsers; **transform** / **opacity** additions would tween more reliably). |
+| `group-hover:bg-gradient-to-br` + `group-hover:from-purple-900/80 group-hover:via-slate-900/80 group-hover:to-blue-800/80` | On frame hover, pill reuses **diagonal gradient** with **brand** purple / slate / blue stops (matches icon **`group-hover:text-blue-600`**). |
+| `transition-all duration-200` | Eases pill changes (gradient interpolation in browsers is limited; **transform** / **shadow** / **opacity** add smoother motion if needed). |
 
 ### `PlayIcon` (Lucide SVG)
 

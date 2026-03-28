@@ -35,7 +35,7 @@ export function Trailer({ trailerUrl, preview }: TrailerProps) {
                         aria-label={trailerUrl ? "Play trailer" : "Trailer unavailable"}
                     >
                         {trailerUrl ? (
-                            <div className="flex items-center justify-center hidden sm:block bg-gradient-to-br from-purple-800/70 via-slate-800/70 to-blue-700/70 rounded-full p-2 group-hover:from-purple-900/80 group-hover:via-slate-900/80 group-hover:to-blue-800/80 transition-all duration-200">
+                            <div className="flex items-center justify-center hidden sm:block bg-gradient-to-br from-slate-700/90 via-slate-900 to-slate-700/90 border border-slate-900/20 rounded-full p-2 group-hover:bg-gradient-to-br group-hover:from-purple-900/80 group-hover:via-slate-900/80 group-hover:to-blue-800/80 transition-all duration-200">
                                 <PlayIcon className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:w-10 text-violet-600 group-hover:text-blue-600 transition-colors duration-450" aria-hidden="true" focusable="false" />
                             </div>
                         ) : (
