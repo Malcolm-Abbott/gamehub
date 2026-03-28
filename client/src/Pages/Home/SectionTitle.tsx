@@ -2,7 +2,7 @@ type SectionTitleProps = {
     icon: React.ReactNode;
     title: string;
     addClass?: string;
-    gamesCount: number;
+    gamesCount?: number;
 }
 
 export function SectionTitle({ icon, title, addClass, gamesCount }: SectionTitleProps) {
