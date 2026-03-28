@@ -24,8 +24,6 @@ export function Game() {
                 const [game, trailer] = await Promise.all([fetchGameById(Number(gameId)), fetchGameTrailers(Number(gameId))]);
                 setGame(game);
                 setTrailer(trailer);
-                console.log('game:', game);
-                console.log('trailer:', trailer);
             } catch (err) {
                 setError(err);
             } finally {
@@ -47,7 +45,7 @@ export function Game() {
             <div className="grid grid-cols-1 lg:grid-cols-2">
                 <LeftHalf game={game} trailers={trailer} />
                 <div className="hidden lg:block">
-                    <RightHalf />
+                    <RightHalf game={game} />
                 </div>
             </div>
         </div>

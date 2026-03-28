@@ -37,7 +37,7 @@ export function Trailer({ trailerUrl, preview }: TrailerProps) {
                         {trailerUrl ? (
                             <PlayIcon className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:w-10" aria-hidden="true" focusable="false" />
                         ) : (
-                            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-center font-bold text-transparent md:text-xl">
+                            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-center font-bold text-transparent text-xl sm:text-2xl">
                                 Trailer Unavailable
                             </span>
                         )}
