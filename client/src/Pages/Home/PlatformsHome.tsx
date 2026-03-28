@@ -26,7 +26,10 @@ function PlatformCard({ platform }: PlatformCardProps) {
         <Link to={`/platforms/${platform.id}`} className="group bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl overflow-hidden border border-slate-700/50 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20 px-8 py-6 flex justify-center items-center">
             <div>
                 <h3 className="text-white text-xl lg:text-2xl font-bold group-hover:text-purple-400 transition-colors duration-200 text-center mb-2">{platform.name}</h3>
-                <p className="text-slate-400 text-sm font-semibold text-center">{platform.games_count} games available</p>
+                <p className="text-slate-400 text-sm lg:text-base font-semibold text-center">
+                    <span className="group-hover:bg-gradient-to-t from-purple-400 to-blue-400 group-hover:bg-clip-text group-hover:text-transparent group-hover:font-bold group-hover:tracking-wide transition-all duration-200">{platform.games_count}</span>{' '} 
+                    games available
+                </p>
             </div>
         </Link>
     )
