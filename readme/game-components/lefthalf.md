@@ -88,10 +88,10 @@ When there is no first movie or no `max`/`480` URL, `trailerUrl` is **falsy** at
 | File | Responsibility |
 |------|----------------|
 | `LeftHalf.tsx` | Column layout, derive `trailerUrl` / `preview`, compose children |
-| `GameImage.tsx` | Framed hero `img` (aspect + border + cover) |
-| `WatchTrailerTitle.tsx` | Section heading row (Play icon + title) |
+| `GameImage.tsx` | Framed hero `img` (aspect + border + cover) — see [`gameimage.md`](./gameimage.md) |
+| `WatchTrailerTitle.tsx` | Section heading row (Play icon + title) — see [`watchtrailertitle.md`](./watchtrailertitle.md) |
 | `Trailer.tsx` | 16:9 area, `<video>`, placeholder, overlay button, local state/ref |
-| `RightHalf.tsx` | Right-column content (also mirrored under `lg` here) |
+| `RightHalf.tsx` | Right-column content (also mirrored under `lg` here) — see [`righthalf.md`](./righthalf.md) |
 
 ---
 
@@ -148,4 +148,7 @@ export function LeftHalf({ game, trailers }: LeftHalfProps) {
 ## 8. Related docs
 
 - **Trailer player behavior, overlay, Tailwind detail:** [`trailer.md`](./trailer.md)
+- **Game route grid and data loading:** [`game.md`](./game.md)
+- **Hero image component:** [`gameimage.md`](./gameimage.md)
+- **“Watch Trailer” heading:** [`watchtrailertitle.md`](./watchtrailertitle.md)
 - **Fetching games / trailers (API):** [`../fetchlogic.md`](../fetchlogic.md)
